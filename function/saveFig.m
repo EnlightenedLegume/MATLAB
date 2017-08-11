@@ -18,17 +18,17 @@ function saveFig(fig, fname, mode, varargin)
 % PROPERTIES
 %         NAME     VALUE TYPE    DESCRIPTION
 %         height   double        Height of the figure, in units set
-%                                by the 'punits' property. DEF: 80
-%                                units 
+%                                by the 'punits' property. DEF:
+%                                26.29 cm
 %         width    double        Width of the figure, in units set
 %                                by the 'punits' property. DEF:
-%                                103.5 units
+%                                20.32 cm
 %         left     double        Distance from left side of
 %                                the paper--ignored by non-paper
-%                                formats. DEF: 5 units
+%                                formats. DEF: 1.5 cm
 %         bottom   double        Distance from the bottom side of
 %                                the paper--ignored by non-paper
-%                                formats. DEF: 5 units
+%                                formats. DEF: 1.5 cm
 %         orient   string        Sets the orientation of the
 %                                paper--ignored by non-paper
 %                                formats. DEF: 'portrait'
@@ -37,8 +37,9 @@ function saveFig(fig, fname, mode, varargin)
 %                                formats. DEF: 'usletter'
 %         bgcolor  string        Sets the background color of the
 %                                figure. DEF: 'w' (white)
-%         punits   string        Sets the units. DEF: 'points'
-%                                (1/72 in.)
+%         punits   string        Sets the units for which
+%                                measurements are in. DEF:
+%                                'centimeters'  
 %         fmode    string        Sets the formatting mode. In
 %                                'auto' mode, saved figure matches
 %                                the displayed figure size (height
@@ -60,20 +61,20 @@ function saveFig(fig, fname, mode, varargin)
 
 
 % Parse varargin if a non-tikz option was selected
-if (nargin > 3 & ~strcmp(mode,'tikz')) 
+if (~strcmp(mode,'tikz')) 
     % Create parser
     p = inputParser;  
     % Keep unmatched for specific fields not used by all file types
     p.KeepUnmatched = 1;
     % Add formating parameters 
-    addParameter(p,'height',80);
-    addParameter(p,'width',103.5);
-    addParameter(p,'left',5);
-    addParameter(p,'bottom',5);
+    addParameter(p,'height',26.29);
+    addParameter(p,'width',20.32);
+    addParameter(p,'left',1.5);
+    addParameter(p,'bottom',1.5);
     addParameter(p,'orient','portrait');
     addParameter(p,'type','usletter');
     addParameter(p,'bgcolor','w')
-    addParameter(p,'punits','points');
+    addParameter(p,'punits','centimeters');
     addParameter(p,'fmode','manual');
     % Parse arguments
     parse(p,varargin{:});
@@ -94,6 +95,8 @@ switch mode
     
   case 'pdf'
     % FORMAT FIGURE
+    % Set units
+    fig.PaperUnits = p.Results.punits; 
     % Set position
     w = p.Results.width;
     h = p.Results.height;
@@ -106,8 +109,6 @@ switch mode
     fig.PaperType = p.Results.type;
     % Set color
     fig.Color = p.Results.bgcolor;
-    % Set units
-    fig.PaperUnits = p.Results.punits;
     % Set formatting mode
     fig.PaperPositionMode = p.Results.fmode;
     
@@ -134,6 +135,8 @@ switch mode
     end
     
     % FORMAT FIGURE
+    % Set units
+    fig.PaperUnits = p.Results.punits; 
     % Set position
     w = p.Results.width;
     h = p.Results.height;
